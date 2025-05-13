@@ -3,7 +3,7 @@ from .models import Location, Location_Image
 
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('id', 'title',)
 
 
 class Location_ImageAdmin(admin.ModelAdmin):
