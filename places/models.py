@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import mark_safe
 
 
 class Location(models.Model):
@@ -19,4 +20,9 @@ class Location_Image(models.Model):
         null=True,
         verbose_name='Локация',
     )
+
+    def image_preview(self):
+        if self.image:
+            return mark_safe(f'<img src="{self.image.url}" style="max-height: 200px;" />')
+        return "Нет изображения"
 
