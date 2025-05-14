@@ -4,6 +4,7 @@ from .models import Location, Location_Image
 
 class Location_ImageInline(admin.TabularInline):
     model = Location_Image
+    readonly_fields = ('image_preview',)
 
 
 @admin.register(Location)
