@@ -7,7 +7,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 class Location_ImageAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'location',)
 
 
 admin.site.register(Location, LocationAdmin)
