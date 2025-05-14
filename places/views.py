@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, HttpResponse
 import json
 from django.shortcuts import render
 from .models import Location
@@ -18,37 +17,10 @@ def home_page(request):
             },
             "properties": {
                 "title": location.title,
-                "placeId": "moscow_legends",
-                "detailsUrl": '/static/where_to_go/moscow_legends.json'
+                "placeId": location.id,
+                "detailsUrl": f'/places/{location.id}/',
             }
         })
-
-    # features = [
-    #     {
-    #         "type": "Feature",
-    #         "geometry": {
-    #             "type": "Point",
-    #             "coordinates": [37.62, 55.793676]
-    #         },
-    #         "properties": {
-    #             "title": "«Легенды Москвы»",
-    #             "placeId": "moscow_legends",
-    #             "detailsUrl": "/static/where_to_go/moscow_legends.json"
-    #         }
-    #     },
-    #     {
-    #         "type": "Feature",
-    #         "geometry": {
-    #             "type": "Point",
-    #             "coordinates": [37.64, 55.753676]
-    #         },
-    #         "properties": {
-    #             "title": "Крыши24.рф",
-    #             "placeId": "roofs24",
-    #             "detailsUrl": "/static/where_to_go/roofs24.json"
-    #         }
-    #     }
-    # ]
 
     geojson = {
         "type": "FeatureCollection",
@@ -62,17 +34,17 @@ def home_page(request):
 
 def place_detail(request, place_id):
     place = Location.objects.get(id=place_id)
-    place_data = []
+    images = [img.image.url for img in place.images.all()]
 
-    place_data.append({
+    place_data = {
         'title': place.title,
-        'imgs': '',
+        'imgs': images,
         'description_short': place.description_short,
         'description_long': place.description_long,
         'coordinates': {
             'lng': place.coordinates_lng,
             'lat': place.coordinates_lat,
         }
-    })
+    }
 
     return JsonResponse(place_data, safe=False, json_dumps_params={"ensure_ascii": False})
