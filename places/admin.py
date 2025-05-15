@@ -1,18 +1,20 @@
+from adminsortable2.admin import SortableTabularInline, SortableAdminMixin
 from django.contrib import admin
-from .models import Location, Location_Image
+from .models import Location, LocationImage
 
 
-class Location_ImageInline(admin.TabularInline):
-    model = Location_Image
+class LocationImageInline(SortableTabularInline):
+    model = LocationImage
     readonly_fields = ('image_preview',)
+    fields = ('image', 'image_preview',)
 
 
 @admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('title',)
-    inlines = [Location_ImageInline,]
+    inlines = [LocationImageInline,]
 
 
-@admin.register(Location_Image)
-class Location_ImageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'location',)
+@admin.register(LocationImage)
+class LocationImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'location',)
