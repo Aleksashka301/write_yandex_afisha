@@ -17,4 +17,4 @@ class LocationAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(LocationImage)
 class LocationImageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'location',)
+    list_display = ('id', 'location',)
