@@ -10,6 +10,9 @@ class Location(models.Model):
     coordinates_lng = models.DecimalField(verbose_name='Координаты долготы', max_digits=20, decimal_places=15)
     coordinates_lat = models.DecimalField(verbose_name='Координаты широты', max_digits=20, decimal_places=15)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         ordering = ['id']
 
