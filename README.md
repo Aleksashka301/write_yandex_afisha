@@ -50,3 +50,29 @@ python manage.py createsuperuser
 Войти в админ панель можно по адресу `my_domain/admin`
 В админ панели можно создавать новые локации с картинками и описанием.
 ![image](https://github.com/user-attachments/assets/8d992230-36d9-48cf-99d6-b260c038ac06)
+## Добавление локаций
+Добавлять локации можно не только через админ панель, но и через `json` файлы. Команда для добавления места
+```python
+python manage.py load_place http://адрес/файл.json
+```
+Пример `json` файла:
+```
+{
+    "title": "Название локации",
+    "imgs": [
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/4f793576c79c1cbe68b73800ae06f06f.jpg",
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/7a7631bab8af3e340993a6fb1ded3e73.jpg",
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/a55cbc706d764c1764dfccf832d50541.jpg",
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/65153b5c595345713f812d1329457b54.jpg",
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/0a79676b3d5e3b394717b4bf2e610a57.jpg",
+        "https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/media/1e27f507cb72e76b604adbe5e7b5f315.jpg"
+    ],
+    "description_short": "Краткое описание локации",
+    "description_long": "Описание локации",
+    "coordinates": {
+        "lng": "37.64912239999976",
+        "lat": "55.77754550000014"
+    }
+}
+```
+
