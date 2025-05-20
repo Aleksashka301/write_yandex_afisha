@@ -1,5 +1,6 @@
 from adminsortable2.admin import SortableTabularInline, SortableAdminMixin
 from django.contrib import admin
+
 from .models import Location, LocationImage
 
 
@@ -18,3 +19,4 @@ class LocationAdmin(SortableAdminMixin, admin.ModelAdmin):
 @admin.register(LocationImage)
 class LocationImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'location',)
+    raw_id_fields = ('location', )
