@@ -10,17 +10,17 @@ class Location(models.Model):
     coordinates_lng = models.DecimalField(verbose_name='Координаты долготы', max_digits=20, decimal_places=15)
     coordinates_lat = models.DecimalField(verbose_name='Координаты широты', max_digits=20, decimal_places=15)
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         ordering = ['id']
+
+    def __str__(self):
+        return self.title
 
 
 class LocationImage(models.Model):
     title = models.CharField(verbose_name='Название картинки', max_length=100)
     image = models.ImageField(verbose_name='Картинка')
-    order = models.PositiveIntegerField(default=0, blank=False, null=False)
+    order = models.PositiveIntegerField(verbose_name='Поле для сортировки', default=0, blank=False, null=False)
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
@@ -29,11 +29,10 @@ class LocationImage(models.Model):
         verbose_name='Локация',
     )
 
-    def image_preview(self):
-        if self.image:
-            return mark_safe(f'<img src="{self.image.url}" style="max-height: 200px;" />')
-        return "Нет изображения"
-
     class Meta:
         ordering = ['order']
 
+    def image_preview(self):
+        if self.image:
+            return mark_safe(f'<img src="{self.image.url}" style="max-width: 300px;" />')
+        return "Нет изображения"
