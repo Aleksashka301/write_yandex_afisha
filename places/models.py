@@ -1,14 +1,14 @@
 from django.db import models
-from django.utils.html import mark_safe
+from django.utils.html import format_html
 from tinymce.models import HTMLField
 
 
 class Location(models.Model):
     title = models.CharField(verbose_name='Название локации', max_length=100)
-    description_short = models.TextField(verbose_name='Краткое описание')
-    description_long = HTMLField(verbose_name='Описание')
-    coordinates_lng = models.DecimalField(verbose_name='Координаты долготы', max_digits=20, decimal_places=15)
-    coordinates_lat = models.DecimalField(verbose_name='Координаты широты', max_digits=20, decimal_places=15)
+    short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
+    long_description = HTMLField(verbose_name='Описание', null=True, blank=True)
+    lng_coordinates = models.DecimalField(verbose_name='Координаты долготы', max_digits=20, decimal_places=15)
+    lat_coordinates = models.DecimalField(verbose_name='Координаты широты', max_digits=20, decimal_places=15)
 
     class Meta:
         ordering = ['id']
@@ -18,14 +18,19 @@ class Location(models.Model):
 
 
 class LocationImage(models.Model):
-    title = models.CharField(verbose_name='Название картинки', max_length=100)
     image = models.ImageField(verbose_name='Картинка')
-    order = models.PositiveIntegerField(verbose_name='Поле для сортировки', default=0, blank=False, null=False)
+    order = models.PositiveIntegerField(
+      verbose_name='Поле для сортировки',
+      default=0,
+      blank=False,
+      null=False,
+      db_index=True
+    )
+
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
         related_name='images',
-        null=True,
         verbose_name='Локация',
     )
 
@@ -34,5 +39,5 @@ class LocationImage(models.Model):
 
     def image_preview(self):
         if self.image:
-            return mark_safe(f'<img src="{self.image.url}" style="max-width: 300px;" />')
+            return format_html('<img src="{}" style="max-width: 300px;" />', self.image.url)
         return "Нет изображения"
