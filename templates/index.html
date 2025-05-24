@@ -39,9 +39,8 @@
       width: 100px;
     }
   </style>
-  <script id="places-geojson" type="application/json">
-    {{ geojson|safe }}
-  </script>
+
+  {{ geojson|json_script:"places-geojson" }}
 
   <script id="app-template" type="text/template">
     <div v-bind:class="{'sidebar-content': 1, 'bg-white': selectedPlace, 'bg-secondary': !selectedPlace}">
@@ -59,10 +58,11 @@
       <div class="place-description" v-if="selectedPlace">
 
         <img v-if="mainPhotoSrc" v-bind:src="mainPhotoSrc" class="d-block shadow mb-3 rounded" v-bind:alt="selectedPlace.title">
+        {% verbatim %}
+            <h5 class="mb-3">{{ selectedPlace.title }}</h5>
 
-        <h5 class="mb-3">{{ selectedPlace.title }}</h5>
-
-        <p>{{ selectedPlace.short_description }}</p>
+            <p>{{ selectedPlace.short_description }}</p>
+        {% endverbatim %}
 
         <div id="place-photos" class="carousel slide mb-3 shadow" data-ride="carousel" data-interval="5000">
           <ol class="carousel-indicators">
