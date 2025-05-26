@@ -70,7 +70,7 @@ class Command(BaseCommand):
                     title=image_name,
                     location=location,
                     order=order,
-                    image=ContentFile(img_temp, name=image_name),
+                    image=ContentFile(response.content, name=image_name),
                 )
 
                 self.stdout.write(self.style.SUCCESS(f'Загружено изображение: {image_name}'))
