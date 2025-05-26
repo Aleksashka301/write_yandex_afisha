@@ -2,8 +2,9 @@ import os
 import tempfile
 import requests
 
-from django.core.files import File
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
+
 from places.models import Location, LocationImage
 
 
@@ -19,15 +20,15 @@ class Command(BaseCommand):
         try:
             response = requests.get(json_url)
             response.raise_for_status()
-            place_data = response.json()
+            payload_place = response.json()
         except requests.RequestException as e:
             self.stderr.write(self.style.ERROR(f'Ошибка при загрузке JSON: {e}'))
             return
 
-        title = place_data.get('title')
-        lng, lat = place_data.get('coordinates', {}).get('lng'), place_data.get('coordinates', {}).get('lat')
-        description_short = place_data.get('description_short', '')
-        description_long = place_data.get('description_long', '')
+        title = payload_place.get('title')
+        lng, lat = payload_place.get('coordinates', {}).get('lng'), payload_place.get('coordinates', {}).get('lat')
+        short_description = payload_place.get('description_short', '')
+        long_description = payload_place.get('description_long', '')
 
         if not all([title, lng, lat]):
             self.stderr.write(self.style.ERROR('Отсутствуют обязательные поля: title, lng или lat'))
@@ -36,10 +37,10 @@ class Command(BaseCommand):
         location, created = Location.objects.get_or_create(
             title=title,
             defaults={
-                'description_short': description_short,
-                'description_long': description_long,
-                'coordinates_lng': lng,
-                'coordinates_lat': lat,
+                'short_description': short_description,
+                'long_description': long_description,
+                'lng_coordinates': lng,
+                'lat_coordinates': lat,
             }
         )
 
@@ -49,7 +50,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Локация "{title}" создана.'))
 
         # Загрузка картинок
-        image_urls = place_data.get('imgs', [])
+        image_urls = payload_place.get('imgs', [])
 
         for order, image_url in enumerate(image_urls):
             try:
@@ -65,12 +66,12 @@ class Command(BaseCommand):
                 img_temp.write(img_response.content)
                 img_temp.flush()
 
-                image = LocationImage(
+                LocationImage.objects.create(
                     title=image_name,
                     location=location,
                     order=order,
+                    image=ContentFile(img_temp, name=image_name),
                 )
-                image.image.save(image_name, File(img_temp), save=True)
 
                 self.stdout.write(self.style.SUCCESS(f'Загружено изображение: {image_name}'))
 
