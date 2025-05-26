@@ -4,9 +4,9 @@ from tinymce.models import HTMLField
 
 
 class Location(models.Model):
-    title = models.CharField(verbose_name='Название локации', max_length=100)
-    short_description = models.TextField(verbose_name='Краткое описание', null=True, blank=True)
-    long_description = HTMLField(verbose_name='Описание', null=True, blank=True)
+    title = models.CharField(verbose_name='Название локации', max_length=100, unique=True)
+    short_description = models.TextField(verbose_name='Краткое описание', blank=True)
+    long_description = HTMLField(verbose_name='Описание', blank=True)
     lng_coordinates = models.DecimalField(verbose_name='Координаты долготы', max_digits=20, decimal_places=15)
     lat_coordinates = models.DecimalField(verbose_name='Координаты широты', max_digits=20, decimal_places=15)
 
@@ -39,5 +39,8 @@ class LocationImage(models.Model):
 
     def image_preview(self):
         if self.image:
-            return format_html('<img src="{}" style="max-width: 300px;" />', self.image.url)
+            return format_html(
+                '<img src="{}" style="max-width: 300px; max-height: 300px;" />',
+                self.image.url
+            )
         return "Нет изображения"
