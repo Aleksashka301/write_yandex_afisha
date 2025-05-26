@@ -67,7 +67,6 @@ class Command(BaseCommand):
                 img_temp.flush()
 
                 LocationImage.objects.create(
-                    title=image_name,
                     location=location,
                     order=order,
                     image=ContentFile(response.content, name=image_name),
