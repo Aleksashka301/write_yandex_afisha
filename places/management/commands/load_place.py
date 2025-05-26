@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 LocationImage.objects.create(
                     location=location,
                     order=order,
-                    image=ContentFile(response.content, name=image_name),
+                    image=ContentFile(img_response.content, name=image_name),
                 )
 
                 self.stdout.write(self.style.SUCCESS(f'Загружено изображение: {image_name}'))
